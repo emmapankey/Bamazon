@@ -60,7 +60,7 @@ function viewProducts() {
 
         for (var i = 0; i < res.length; i++) {
             console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
-                "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
+                "\nDepartment: " + res[i].department_name + "\nPrice: $" + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
         }
         managerPrompt();
     });
@@ -75,7 +75,7 @@ function viewLowInventory() {
 
         for (var i = 0; i < res.length; i++) {
             console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
-                "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
+                "\nDepartment: " + res[i].department_name + "\nPrice: $" + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
         }
         managerPrompt();
     });
@@ -83,8 +83,11 @@ function viewLowInventory() {
 
 // funciton which allows the manager to add more stock to a current store item
 function addInventory() {
+    var chosen;
+    var addQuantity;
+
     //prompt user for the product id of the product they are adding stock to
-    inquirer.prompt(
+    inquirer.prompt([
         {
             name: "productid",
             type: "input",
@@ -106,26 +109,33 @@ function addInventory() {
                 }
                 return false;
             }
-        }
-    ).then(function (answer) {
-        // when finished prompting, insert the new inventory into the db
-        connection.query("SELECT * FROM products WHERE ?", {product_id: answer.productid},
-        function (err, res) {
+        }]).then(function (answer) {
+            addQuantity = parseInt(answer.quantity);
+
+            connection.query("SELECT * FROM products", function (err, res) {
                 if (err) throw err;
+                // get the product information for the chosen product id
+                for (var i = 0; i < res.length; i++) {
 
-                var querystr = "UPDATE products SET stock_quantity = " + (res[0].stock_quantity + answer.quantity) +
-                
-                connection.query(querystr, function(err, data) {
-                    if (err) throw err;
+                    if (res[i].item_id === parseInt(answer.productid)) {
+                        chosen = res[i];
 
-                    console.log("The stock quantity for Item ID " + answer.productid + " has been updated to " + res[0].stock_quantity + answer.quantity);
-                })
+                        // console.log(chosen);
 
-               
-            }
-        );
+                        var newStockQuantity = chosen.stock_quantity + addQuantity;
 
-    });
+                        // when finished prompting, insert the new inventory into the db
+                        connection.query("UPDATE products SET stock_quantity = " + newStockQuantity + " WHERE item_id = " + answer.productid,
+                            function (error) {
+                                if (error) throw err;
+                                console.log("\nInventory has been added to Product ID " + answer.productid + "\nThe new stock quantity is " + newStockQuantity + "\n");
+                                managerPrompt();
+                            }
+                        )
+                    }
+                }
+            });
+        })
 }
 
 
