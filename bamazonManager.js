@@ -81,7 +81,52 @@ function addInventory() {
 
 }
 
-// function which allows the manager to add a new item to the store
+// function which allows the manager to add a new product to the store
 function addNewProduct() {
-
+     // prompt for info about the product being added
+  inquirer.prompt([
+    {
+      name: "name",
+      type: "input",
+      message: "Input the product name"
+    },
+    {
+      name: "department",
+      type: "input",
+      message: "Input the product's department"
+    },
+    {
+      name: "price",
+      type: "input",
+      message: "Input the price per unit item"
+    },
+    {
+    name: "stock",
+    type: "input",
+    message: "Input the current stock quantity",
+    validate: function(value) {
+        if (isNaN(value) === false) {
+          return true;
+        }
+        return false;
+      }
+    }
+  ])
+  .then(function(answer) {
+    // when finished prompting, insert the new product into the db with that info
+    connection.query(
+      "INSERT INTO products SET ?",
+      {
+        product_name: answer.name,
+        department_name: answer.department,
+        price: answer.price,
+        stock_quantity: answer.stock
+      },
+      function(err) {
+        if (err) throw err;
+        console.log("\nTHIS PRODUCT WAS SUCCESSFULLY ADDED\n");
+        managerPrompt();
+      }
+    );
+  });
 }
