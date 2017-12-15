@@ -22,6 +22,7 @@ connection.connect(function (err) {
     managerPrompt();
 });
 
+// initial prompt to ask maanager to choose from a range of options
 function managerPrompt() {
     inquirer.prompt(
         {
@@ -54,7 +55,9 @@ function managerPrompt() {
 function viewProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
+
         console.log("\nEXISTING PRODUCT INVENTORY:\n")
+
         for (var i = 0; i < res.length; i++) {
             console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
                 "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
@@ -67,7 +70,9 @@ function viewProducts() {
 function viewLowInventory() {
     var query = "SELECT * FROM products WHERE stock_quantity < 100"
     connection.query(query, function (err, res) {
+
         console.log("\nLOW INVENTORY:\n")
+
         for (var i = 0; i < res.length; i++) {
             console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
                 "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
@@ -124,7 +129,9 @@ function addNewProduct() {
       },
       function(err) {
         if (err) throw err;
+
         console.log("\nTHIS PRODUCT WAS SUCCESSFULLY ADDED\n");
+
         managerPrompt();
       }
     );
