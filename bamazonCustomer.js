@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   // Your username
   user: "root",
   // Your password
-  password: "",
+  password: "liaso019",
   database: "bamazon"
 });
 
@@ -124,7 +124,7 @@ function continueShopping() {
     }
     else if (answer.continueShopping.toLowerCase() === "no") {
       console.log("\nThank you for shopping\n");
-      return;
+      connection.end();
     }
   })
 }
