@@ -83,57 +83,104 @@ function viewLowInventory() {
 
 // funciton which allows the manager to add more stock to a current store item
 function addInventory() {
+    //prompt user for the product id of the product they are adding stock to
+    inquirer.prompt(
+        {
+            name: "productid",
+            type: "input",
+            message: "Enter the product id of the product you would like to add inventory for:",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many units do you wish to add?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    ).then(function (answer) {
+        // when finished prompting, insert the new inventory into the db
+        connection.query("SELECT * FROM products WHERE ?", {product_id: answer.productid},
+        function (err, res) {
+                if (err) throw err;
 
+                var querystr = "UPDATE products SET stock_quantity = " + (res[0].stock_quantity + answer.quantity) +
+                
+                connection.query(querystr, function(err, data) {
+                    if (err) throw err;
+
+                    console.log("The stock quantity for Item ID " + answer.productid + " has been updated to " + res[0].stock_quantity + answer.quantity);
+                })
+
+               
+            }
+        );
+
+    });
 }
+
 
 // function which allows the manager to add a new product to the store
 function addNewProduct() {
-     // prompt for info about the product being added
-  inquirer.prompt([
-    {
-      name: "name",
-      type: "input",
-      message: "Input the product name"
-    },
-    {
-      name: "department",
-      type: "input",
-      message: "Input the product's department"
-    },
-    {
-      name: "price",
-      type: "input",
-      message: "Input the price per unit item"
-    },
-    {
-    name: "stock",
-    type: "input",
-    message: "Input the current stock quantity",
-    validate: function(value) {
-        if (isNaN(value) === false) {
-          return true;
-        }
-        return false;
-      }
-    }
-  ])
-  .then(function(answer) {
-    // when finished prompting, insert the new product into the db with that info
-    connection.query(
-      "INSERT INTO products SET ?",
-      {
-        product_name: answer.name,
-        department_name: answer.department,
-        price: answer.price,
-        stock_quantity: answer.stock
-      },
-      function(err) {
-        if (err) throw err;
+    // prompt for info about the product being added
+    inquirer.prompt([
+        {
+            name: "name",
+            type: "input",
+            message: "Input the product name"
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "Input the product's department"
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "Input the price per unit item",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: "stock",
+            type: "input",
+            message: "Input the current stock quantity",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }]).then(function (answer) {
+            // when finished prompting, insert the new product into the db with that info
+            connection.query(
+                "INSERT INTO products SET ?",
+                {
+                    product_name: answer.name,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.stock
+                },
+                function (err) {
+                    if (err) throw err;
 
-        console.log("\nTHIS PRODUCT WAS SUCCESSFULLY ADDED\n");
+                    console.log("\nTHIS PRODUCT WAS SUCCESSFULLY ADDED\n");
 
-        managerPrompt();
-      }
-    );
-  });
+                    managerPrompt();
+                }
+            );
+        });
 }
