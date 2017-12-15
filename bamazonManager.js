@@ -35,20 +35,16 @@ function managerPrompt() {
                     viewProducts();
                     break;
 
-                case "Search for all artists who appear more than once":
-                    searchDuplicateArtists();
+                case "View Low Inventory":
+                    viewLowInventory();
                     break;
 
-                case "Search for songs from between a specific range":
-                    searchFromRange();
+                case "Add to Inventory":
+                    addInventory();
                     break;
 
-                case "Search for a specific range":
-                    songSearch();
-                    break;
-
-                case "Search for a specific song":
-                    searchSpecificSong();
+                case "Add New Product":
+                    addNewProduct();
                     break;
             }
         })
@@ -58,9 +54,34 @@ function managerPrompt() {
 function viewProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
+        console.log("\nEXISTING PRODUCT INVENTORY:\n")
         for (var i = 0; i < res.length; i++) {
             console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
                 "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
         }
+        managerPrompt();
     });
+}
+
+// function which queries and displays all products with a current inventory count lower than five
+function viewLowInventory() {
+    var query = "SELECT * FROM products WHERE stock_quantity < 100"
+    connection.query(query, function (err, res) {
+        console.log("\nLOW INVENTORY:\n")
+        for (var i = 0; i < res.length; i++) {
+            console.log("Item id: " + res[i].item_id + "\nProduct Name: " + res[i].product_name +
+                "\nDepartment: " + res[i].department_name + "\nPrice: " + res[i].price + "\nQuantity in Stock: " + res[i].stock_quantity + "\n\n");
+        }
+        managerPrompt();
+    });
+}
+
+// funciton which allows the manager to add more stock to a current store item
+function addInventory() {
+
+}
+
+// function which allows the manager to add a new item to the store
+function addNewProduct() {
+
 }
