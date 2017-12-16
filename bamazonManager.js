@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     // Your username
     user: "root",
     // Your password
-    password: "liaso019",
+    password: "",
     database: "bamazon"
 });
 
@@ -131,7 +131,7 @@ function addInventory() {
                     connection.query(queryStr, function (err) {
                         if (err) throw err;
 
-                        console.log('\nStock count for Item ID ' + itemId + ' has been updated to ' + (res[0].stock_quantity + addQuantity) + "\n");
+                        console.log('\nSTOCK COUNT FOR ITEM ID ' + itemId + ' HAS BEEN UPDATED TO ' + (res[0].stock_quantity + addQuantity) + "\n");
                         managerPrompt();
                     })
                 }
