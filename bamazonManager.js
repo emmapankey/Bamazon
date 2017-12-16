@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     // Your username
     user: "root",
     // Your password
-    password: "",
+    password: "liaso019",
     database: "bamazon"
 });
 
@@ -53,8 +53,10 @@ function managerPrompt() {
 
 // function which queries and displays all of the current product information in the database
 function viewProducts() {
-    var query = "SELECT * FROM products";
-    connection.query(query, function (err, res) {
+    // construct query string
+    var queryStr = "SELECT * FROM products";
+
+    connection.query(queryStr, function (err, res) {
 
         console.log("\nEXISTING PRODUCT INVENTORY:\n")
 
@@ -68,8 +70,10 @@ function viewProducts() {
 
 // function which queries and displays all products with a current inventory count lower than five
 function viewLowInventory() {
-    var query = "SELECT * FROM products WHERE stock_quantity < 100"
-    connection.query(query, function (err, res) {
+    // construct query string
+    var queryStr = "SELECT * FROM products WHERE stock_quantity < 100"
+
+    connection.query(queryStr, function (err, res) {
 
         console.log("\nLOW INVENTORY:\n")
 
@@ -83,8 +87,6 @@ function viewLowInventory() {
 
 // funciton which allows the manager to add more stock to a current store item
 function addInventory() {
-    var chosen;
-    var addQuantity;
 
     //prompt user for the product id of the product they are adding stock to
     inquirer.prompt([
@@ -110,33 +112,33 @@ function addInventory() {
                 return false;
             }
         }]).then(function (answer) {
-            addQuantity = parseInt(answer.quantity);
 
-            connection.query("SELECT * FROM products", function (err, res) {
+            var addQuantity = parseInt(answer.quantity);
+            var itemId = parseInt(answer.productid);
+
+            connection.query("SELECT * FROM products WHERE ?", { item_id: parseInt(answer.productid) }, function (err, res) {
+
                 if (err) throw err;
-                // get the product information for the chosen product id
-                for (var i = 0; i < res.length; i++) {
 
-                    if (res[i].item_id === parseInt(answer.productid)) {
-                        chosen = res[i];
+                if (res.length === 0) {
+                    console.log("\nPlease enter a valid Product ID.\n");
+                    addInventory();
+                }
+                else {
+                    // construct query string
+                    var queryStr = 'UPDATE products SET stock_quantity = ' + (res[0].stock_quantity + addQuantity) + ' WHERE item_id = ' + itemId;
 
-                        // console.log(chosen);
+                    connection.query(queryStr, function (err) {
+                        if (err) throw err;
 
-                        var newStockQuantity = chosen.stock_quantity + addQuantity;
-
-                        // when finished prompting, insert the new inventory into the db
-                        connection.query("UPDATE products SET stock_quantity = " + newStockQuantity + " WHERE item_id = " + answer.productid,
-                            function (error) {
-                                if (error) throw err;
-                                console.log("\nInventory has been added to Product ID " + answer.productid + "\nThe new stock quantity is " + newStockQuantity + "\n");
-                                managerPrompt();
-                            }
-                        )
-                    }
+                        console.log('\nStock count for Item ID ' + itemId + ' has been updated to ' + (res[0].stock_quantity + addQuantity) + "\n");
+                        managerPrompt();
+                    })
                 }
             });
-        })
+        });
 }
+
 
 
 // function which allows the manager to add a new product to the store
