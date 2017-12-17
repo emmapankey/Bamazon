@@ -2,6 +2,8 @@
 
 MySQL and Node.JS are used to create a storefront CLI App.
 
+![ScreenShot](images/productsTable.png)
+
 
 ## Getting Started
 
@@ -38,7 +40,11 @@ node bamazonManager.js
 
 Product data for all currently in stock items are displayed for the customer. They are then prompted to place an order by providing the product id and desired number of units to purchase.
 
+![ScreenShot](images/customerPurchase.png)
+
 When a customer order is processed they are notified what their total purchase cost is and stock quantity is updated in the database.
+
+![ScreenShot](images/updateDatabaseAfterPurchase.png)
 
 If there is not enough product in stock to fulfill a customer order they are notified that the order cannot be completed.
 
