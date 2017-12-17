@@ -71,7 +71,7 @@ function viewProducts() {
 // function which queries and displays all products with a current inventory count lower than five
 function viewLowInventory() {
     // construct query string
-    var queryStr = "SELECT * FROM products WHERE stock_quantity < 5"
+    var queryStr = "SELECT * FROM products WHERE stock_quantity < 100"
 
     connection.query(queryStr, function (err, res) {
 
@@ -131,7 +131,7 @@ function addInventory() {
                     connection.query(queryStr, function (err) {
                         if (err) throw err;
 
-                        console.log('\nSTOCK COUNT FOR ITEM ID ' + itemId + ' HAS BEEN UPDATED TO ' + (res[0].stock_quantity + addQuantity) + "\n");
+                        console.log('\nStock count for Item ID ' + itemId + ' has been updated to ' + (res[0].stock_quantity + addQuantity) + "\n");
                         managerPrompt();
                     })
                 }
