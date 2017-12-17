@@ -65,14 +65,23 @@ If a manager selects `View Products for Sale` product data for all available ite
 
 If a manager selects `View Low Inventory` product data for items with an inventory count lower than five are listed.
 
+![ScreenShot](images/lowInventory.png)
+
 ###### Add to Inventory
 
 If a manager selects `Add to Inventory` they are prompted to provide the product id and the number of units to add to a chosen item's inventory. The sql database is updated to reflect the change in inventory.
+
+![ScreenShot](images/addInventory.png)
+
+![ScreenShot](images/updateDatabaseAfterAddInventory.png)
 
 ###### Add New Product
 
 If a manager selects `Add New Product` they are prompted to provide the relevant sql table data for a brand new store item and the database is updated accordingly.
 
+![ScreenShot](images/addProduct.png)
+
+![ScreenShot](images/updateDatabaseAfterAddProduct.png)
 
 ## Author
 

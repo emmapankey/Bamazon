@@ -71,7 +71,7 @@ function viewProducts() {
 // function which queries and displays all products with a current inventory count lower than five
 function viewLowInventory() {
     // construct query string
-    var queryStr = "SELECT * FROM products WHERE stock_quantity < 100"
+    var queryStr = "SELECT * FROM products WHERE stock_quantity < 5"
 
     connection.query(queryStr, function (err, res) {
 
