@@ -13,19 +13,31 @@ First clone this repository:
 https://github.com/emmapankey/Bamazon.git
 ```
 
-### Installing
 
-In the terminal execute the following commands for installing node packages:
+## Prerequisites
+
+#### Node.js and npm
+Go to the Node.js site: https://nodejs.org/en. Click the download button, and run through the installation file.
+When you install node.js, npm is automatically installed.
+To check if you have Node.js installed, run this command in your terminal:
+```
+node -v
+```
+To confirm that you have npm installed you can run this command in your terminal:
+```
+npm -v
+```
+
+#### Installing Node Packages
+
+
+In the terminal execute the following command to install all node dependencies (see package.json for list):
 
 ```
-npm install mysql
+npm install
 ```
 
-```
-npm install inquirer
-```
-
-### Run
+## Run
 
 To run the application and connect to the MySQL server execute the following commands in the respective .js files:
 
